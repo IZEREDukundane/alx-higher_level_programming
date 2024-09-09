@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "lists.h"
 
+#ifndef LISTS_H
+
 /**
  * main - check the code
  *
