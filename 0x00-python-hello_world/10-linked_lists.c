@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "lists.h"
 #ifndef LISTS_H
+#define LISTS_H
+
+#endif
 
 /**
  * print_listint - prints all elements of a listint_t list
