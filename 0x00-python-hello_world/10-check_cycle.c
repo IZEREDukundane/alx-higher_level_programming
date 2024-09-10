@@ -1,46 +1,35 @@
 #include "lists.h"
-#ifndef LISTS_H
-
 
 /**
- * check_cycle - Function checks for availability of a cycle
- * in a linked list
- * @list: The linked list pointer
+ * check_cycle - Entry Point
  *
- * Return: 1 if cycled, 0 if not
+ * Description: This function checks if there is a cycle in a singly linked
+ * list
+ *
+ * @list: head pointer of the list
+ *
+ * Return: 1 if cycle exists, 0 otherwise
  */
+
 
 int check_cycle(listint_t *list)
 {
-	listint_t *faster_ptr;
-	listint_t *slower_ptr;
+	listint_t *tortoise = NULL;
+	listint_t *hare = NULL;
 
-	faster_ptr = list;
-	slower_ptr = list;
-	while (list && faster_ptr && faster_ptr->next)
+	if (list == NULL || list->next == NULL)
+		return (0);
+
+	tortoise = list;
+	hare = list->next;
+
+	while (hare != NULL && hare->next != NULL)
 	{
-		list = list->next;
-		faster_ptr = faster_ptr->next->next;
-
-		if (list == faster_ptr)
-		{
-			list = slower_ptr;
-			slower_ptr =  faster_ptr;
-			while (1)
-			{
-				faster_ptr = slower_ptr;
-				while (faster_ptr->next != list && faster_ptr->next != slower_ptr)
-				{
-					faster_ptr = faster_ptr->next;
-				}
-				if (faster_ptr->next == list)
-					break;
-
-				list = list->next;
-			}
+		if (tortoise == hare)
 			return (1);
-		}
-	}
 
+		tortoise = tortoise->next;
+		hare = hare->next->next;
+	}
 	return (0);
 }
