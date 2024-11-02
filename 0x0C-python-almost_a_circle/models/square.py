@@ -1,49 +1,81 @@
 #!/usr/bin/python3
-'''Module for Square class.'''
+"""A module that defines a Square and inherits from the Rectangle class."""
+
 from models.rectangle import Rectangle
 
 
 class Square(Rectangle):
-    '''A Square class.'''
+    """Models a Square object."""
 
-    def __init__(self, size, x=0, y=0, id=None):
-        '''Constructor.'''
+    def __init__(self, size, x=0, y=0, id=None) -> None:
         super().__init__(size, size, x, y, id)
+        self.size = self.width
 
-    def __str__(self):
-        '''Returns string info about this square.'''
-        return '[{}] ({}) {}/{} - {}'.\
-            format(type(self).__name__, self.id, self.x, self.y, self.width)
+    def __str__(self) -> str:
+        """
+        Returns information about the Square instance.
+
+        Returns:
+            str: Information about the Square instance.
+        """
+        return (
+            f"[{self.__class__.__name__}] ({self.id}) "
+            f"{self.x}/{self.y} - {self.size}"
+        )
 
     @property
-    def size(self):
-        '''Size of this square.'''
+    def size(self) -> int:
+        """
+        Returns the size of the Square instance.
+
+        Returns:
+            int: The size of the Square instance.
+        """
         return self.width
 
     @size.setter
-    def size(self, value):
+    def size(self, value: int) -> None:
+        """
+        Sets and updates the `size` attribute of the Square instance.
+
+        Args:
+            value (int): The value to use as the new size.
+        """
         self.width = value
         self.height = value
 
-    def __update(self, id=None, size=None, x=None, y=None):
-        '''Internal method that updates instance attributes via */**args.'''
-        if id is not None:
-            self.id = id
-        if size is not None:
-            self.size = size
-        if x is not None:
-            self.x = x
-        if y is not None:
-            self.y = y
+    def update(self, *args, **kwargs) -> None:
+        """
+        Updates attributes with the values in the provided `args` or `kwargs`.
+        """
+        if args is not None and len(args) > len(self.__dict__.keys()):
+            raise ValueError("excess positional arguments than expected")
 
-    def update(self, *args, **kwargs):
-        '''Updates instance attributes via no-keyword & keyword args.'''
-        if args:
-            self.__update(*args)
-        elif kwargs:
-            self.__update(**kwargs)
+        if args is not None and len(args) > 0:
+            obj_dict_keys = list(self.to_dictionary().keys())
+            obj_dict_keys.sort()
 
-    def to_dictionary(self):
-        '''Returns dictionary representation of this class.'''
-        return {"id": self.id, "size": self.width,
-                "x": self.x, "y": self.y}
+            for i, value in enumerate(args):
+                setattr(self, obj_dict_keys[i], value)
+            return
+
+        # use the keyword arguments instead since the *args was unavailable
+        for attr, value in kwargs.items():
+            if not hasattr(self, attr):
+                raise AttributeError(f"invalid attribute name: '{attr}'")
+
+            setattr(self, attr, value)
+
+    def to_dictionary(self) -> dict:
+        """
+        Returns the dictionary representation of a Square instance.
+
+        Returns:
+            dict: The dictionary representation of a Square instance.
+        """
+        return {
+            "id": self.id,
+            "x": self.x,
+            "size": self.width,
+            "y": self.y,
+        }
